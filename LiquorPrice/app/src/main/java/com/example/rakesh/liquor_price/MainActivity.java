@@ -14,8 +14,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,25 +28,37 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+        private String test_ad_id="ca-app-pub-3940256099942544~3347511713";
+        private AdView madView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        MobileAds.initialize(this,test_ad_id);
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Spinner liqType=(Spinner) findViewById(R.id.spinner);
+        Spinner liqType= findViewById(R.id.spinner);
+        Spinner Vol= findViewById(R.id.spinner2);
+        Button search= findViewById(R.id.button);
 
+        madView=findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        madView.loadAd(adRequest);
+
+
+
+        //liq type spinner
         final List<String> liqTypeList = new ArrayList<String>();
         liqTypeList.add("Liquor Type");
         liqTypeList.add("BEER");
@@ -56,6 +73,8 @@ public class MainActivity extends AppCompatActivity
         liqType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+
                 Toast.makeText(getApplicationContext(),liqTypeList.get(position),Toast.LENGTH_LONG).show();
             }
 
@@ -64,6 +83,39 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+        //volume spiner
+        final List<String> liqVolList=new ArrayList<String>();
+        liqVolList.add("select volume");
+        liqVolList.add("180ml");
+        liqVolList.add("375ml");
+        liqVolList.add("750ml");
+        liqVolList.add("other");
+        final ArrayAdapter<String> liqVolListt;
+        liqVolListt=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,liqVolList);
+        liqVolListt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        Vol.setAdapter(liqVolListt);
+        Vol.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+
+                Toast.makeText(getApplicationContext(),liqVolList.get(position),Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        //search button
+
+
+
 
     }
 
@@ -109,9 +161,7 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+        }  else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
 
